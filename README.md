@@ -1,0 +1,2 @@
+# hltv-no-spoilers
+
