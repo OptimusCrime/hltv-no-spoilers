@@ -2,12 +2,29 @@ package parser
 
 import (
 	"errors"
+	"golang.org/x/net/html"
 	"regexp"
 	"slices"
+	"strconv"
 	"strings"
 	"time"
 )
 
+var matchIdExp = regexp.MustCompile(`(?m)^/matches/([0-9]+).*$`)
+var dateExp = regexp.MustCompile("[^0-9]+")
+
+func parseMatchIdFromUrl(url string) (int64, error) {
+	escapedUrl := html.UnescapeString(url)
+	matches := matchIdExp.FindStringSubmatch(escapedUrl)
+
+	if len(matches) != 2 {
+		return 0, errors.New("could not find match id: " + escapedUrl)
+	}
+
+	return strconv.ParseInt(matches[1], 10, 0)
+}
+
+// lmao
 func parseMatchDateStr(dateString string) (*time.Time, error) {
 	cleanString := strings.Split(strings.Trim(strings.Replace(dateString, "Results for", "", 1), " "), " ")
 
@@ -31,6 +48,7 @@ func parseMatchDateStr(dateString string) (*time.Time, error) {
 	return &matchDate, nil
 }
 
+// this is 10/10 genius code
 func parseMonth(month string) (string, error) {
 	switch strings.ToLower(month) {
 	case "january":
@@ -63,8 +81,7 @@ func parseMonth(month string) (string, error) {
 }
 
 func parseDate(dateString string) string {
-	reg, _ := regexp.Compile("[^0-9]+")
-	return reg.ReplaceAllString(dateString, "")
+	return dateExp.ReplaceAllString(dateString, "")
 }
 
 func addLeadingZero(str string) string {

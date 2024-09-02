@@ -3,6 +3,7 @@ package requester
 import (
 	"crypto/tls"
 	"errors"
+	"fmt"
 	"io"
 	"net"
 	"net/http"
@@ -21,6 +22,8 @@ type RequestParams struct {
 
 func MakeRequest(p *RequestParams) ([]byte, error) {
 	requestUrl := BaseUrl + p.Url
+
+	fmt.Println(requestUrl)
 
 	req, err := http.NewRequest("GET", requestUrl, nil)
 	if err != nil {

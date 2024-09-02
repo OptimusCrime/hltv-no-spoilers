@@ -1,4 +1,4 @@
-package matches
+package match
 
 import (
 	"github.com/gorilla/mux"
@@ -10,22 +10,22 @@ import (
 func RegisterHandlers(r *mux.Router) {
 	h := &httpHandler{}
 
-	r.HandleFunc("/v1/team/{teamId}/matches", h.getMatchesForTeam).Methods(http.MethodGet, http.MethodOptions)
+	r.HandleFunc("/v1/match/{matchId}", h.getMatchVODs).Methods(http.MethodGet, http.MethodOptions)
 }
 
 type httpHandler struct {
 }
 
-func (h *httpHandler) getMatchesForTeam(w http.ResponseWriter, r *http.Request) {
+func (h *httpHandler) getMatchVODs(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	log := logger.FromContext(ctx)
 
-	teamId := mux.Vars(r)["teamId"]
+	matchId := mux.Vars(r)["matchId"]
 
-	resp, err := findMatchesForTeam(teamId)
+	resp, err := findMatchVODs(matchId)
 	if err != nil {
-		log.Debug("failed to find matches for team: %v", err)
+		log.Debug("failed to find VODs for match: %v", err)
 		return
 	}
 

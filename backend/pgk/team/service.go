@@ -1,4 +1,4 @@
-package matches
+package team
 
 import (
 	"github.com/optimuscrime/hltv-no-spoilers/pgk/parser"

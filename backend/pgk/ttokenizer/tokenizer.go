@@ -5,6 +5,10 @@ import (
 	"strings"
 )
 
+// This package thing is only used because we are not allowed to call .Token() multiple times without advancing the
+// cursor with .Next() between each .Token() call. Temporarily storing the token and type in this struct to work around
+// this without having to pass other structs back and forth all the time. Annoying.
+
 type Ttokenizer struct {
 	Tokenizer *html.Tokenizer
 	Token     *html.Token
@@ -19,8 +23,6 @@ func CreateTokenizerFromString(body string) *Ttokenizer {
 	}
 }
 
-// Next Stupid wrapper stuff because we can't call .Token() multiple times without calling .Next() in between, so we
-// do this to store the token for multiple lookups
 func (t *Ttokenizer) Next() {
 	tokenType := t.Tokenizer.Next()
 	token := t.Tokenizer.Token()
@@ -29,14 +31,18 @@ func (t *Ttokenizer) Next() {
 	t.Token = &token
 }
 
+func (t *Ttokenizer) GetTokenString() (string, error) {
+	str := strings.Trim(html.EscapeString(t.Token.String()), "")
+	return str, nil
+}
+
 func (t *Ttokenizer) GetNextTokenString() (string, error) {
 	t.Next()
 	newTokenType := *t.TokenType
-	newToken := *t.Token
+
 	if newTokenType == html.ErrorToken {
 		return "", ErrFailedToParse
 	}
 
-	str := strings.Trim(html.EscapeString(newToken.String()), "")
-	return str, nil
+	return t.GetTokenString()
 }

@@ -7,7 +7,7 @@ import (
 )
 
 type TeamResult struct {
-	Url       string `json:"url"`
+	Id        int64  `json:"id"`
 	Team1     string `json:"team1"`
 	Team2     string `json:"team2"`
 	EventName string `json:"eventName"`
@@ -123,7 +123,12 @@ func parseTeamResults(tokenizer *ttokenizer.Ttokenizer) (*TeamResult, error) {
 
 			for _, attribute := range attributes {
 				if isMatchURL(attribute) {
-					match.Url = html.UnescapeString(attribute.Val)
+					matchId, err := parseMatchIdFromUrl(attribute.Val)
+					if err != nil {
+						return nil, err
+					}
+
+					match.Id = matchId
 				}
 
 				if isTeamName(attribute, token) {
