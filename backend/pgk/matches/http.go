@@ -29,5 +29,5 @@ func (h *httpHandler) getMatchesForTeam(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	render.JSON(w, r, resp)
+	render.JSON(w, r, &resp)
 }

@@ -1,11 +1,12 @@
 package matches
 
 import (
+	"github.com/optimuscrime/hltv-no-spoilers/pgk/parser"
 	"github.com/optimuscrime/hltv-no-spoilers/pgk/requester"
 	"net/url"
 )
 
-func findMatchesForTeam(teamId string) (*[]MatchGroup, error) {
+func findMatchesForTeam(teamId string) ([]parser.TeamResultGroup, error) {
 	query := url.Values{}
 	query.Add("team", teamId)
 
@@ -16,5 +17,5 @@ func findMatchesForTeam(teamId string) (*[]MatchGroup, error) {
 
 	body := string(bodyBytes)
 
-	return parseResults(body)
+	return parser.ParseTeamResults(body)
 }

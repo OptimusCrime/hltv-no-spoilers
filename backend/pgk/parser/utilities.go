@@ -1,13 +1,14 @@
-package matches
+package parser
 
 import (
 	"errors"
 	"regexp"
+	"slices"
 	"strings"
 	"time"
 )
 
-func parseMatchDate(dateString string) (*time.Time, error) {
+func parseMatchDateStr(dateString string) (*time.Time, error) {
 	cleanString := strings.Split(strings.Trim(strings.Replace(dateString, "Results for", "", 1), " "), " ")
 
 	if len(cleanString) != 3 {
@@ -72,4 +73,12 @@ func addLeadingZero(str string) string {
 	}
 
 	return str
+}
+
+func reverseMatches(matchGroups []TeamResultGroup) []TeamResultGroup {
+	for _, matchGroup := range matchGroups {
+		slices.Reverse(matchGroup.Matches)
+	}
+
+	return matchGroups
 }
