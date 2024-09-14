@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Git Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build and publish go to Registry
         uses: elgohr/Publish-Docker-Github-Action@v5
