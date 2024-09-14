@@ -1,5 +1,5 @@
-import React from 'react';
 import cx from 'classnames';
+import React from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../../../store/hooks';
 import { setStartingPoint } from '../../../../store/reducers/globalReducer';
@@ -12,9 +12,9 @@ export const MatchesControls = () => {
   return (
     <div className="flex flex-col w-full space-y-4">
       <div>
-        <p>Matches loaded. Select starting point:</p>
+        <p>Matches loaded. Select starting point.</p>
       </div>
-      <div className="flex flex-row space-x-4">
+      <div className="flex flex-row justify-between bg-base-100 rounded-md p-4 w-auto">
         <button
           className={cx('btn', {'btn-active': startingPoint === 'one-week' })}
           onClick={() => dispatch(setStartingPoint('one-week'))}

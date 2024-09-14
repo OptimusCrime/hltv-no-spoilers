@@ -44,6 +44,11 @@ func ParseTeamResults(body string) ([]TeamResultGroup, error) {
 					return nil, err
 				}
 
+				// Skip featured matches
+				if newMatchGroupResponse.MatchDate == nil {
+					continue
+				}
+
 				teamResultGroups = append(teamResultGroups, newMatchGroupResponse)
 			}
 		}

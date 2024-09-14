@@ -1,8 +1,6 @@
 import { StartingPointType } from '../store/reducers/globalReducer/types';
 import { TeamMatchGroup } from '../types/common';
-import { match } from 'node:assert';
 
-// lol
 export const revealMatchesFromStartingPoint = (matchGroups: TeamMatchGroup[], startingPoint: StartingPointType): TeamMatchGroup[] => {
   const startDate = startingPointToDate(startingPoint);
   const resetMatchGroups = resetMatches(matchGroups);
@@ -104,7 +102,7 @@ export const revealOneMoreMatch = (matchGroups: TeamMatchGroup[]): TeamMatchGrou
     .reverse();
 };
 
-const resetMatches = (matchGroups: TeamMatchGroup[]): TeamMatchGroup[] => matchGroups.map(matchGroup => ({
+export const resetMatches = (matchGroups: TeamMatchGroup[]): TeamMatchGroup[] => matchGroups.map(matchGroup => ({
   ...matchGroup,
   display: false,
   matches: matchGroup.matches.map(match => ({

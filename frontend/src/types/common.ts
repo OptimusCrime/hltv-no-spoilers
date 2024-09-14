@@ -10,10 +10,16 @@ export interface TeamMatchGroup {
 }
 
 export interface TeamMatch {
-  url: string;
+  id: number;
   team1: string;
   team2: string;
   eventName: string;
-  matchType: string;
+  type: string;
+  display: boolean;
+}
+
+export interface MatchMap {
+  title: string;
+  url: string;
   display: boolean;
 }

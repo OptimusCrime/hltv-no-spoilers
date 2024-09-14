@@ -3,8 +3,9 @@ import { useEffect } from 'react';
 
 import { getTeamMatches } from '../../../../api/endpoints/backendEndpoints';
 import { useAppDispatch, useAppSelector } from '../../../../store/hooks';
-import { showOneMoreMatch, setMatches } from '../../../../store/reducers/globalReducer';
+import { setMatches,showOneMoreMatch } from '../../../../store/reducers/globalReducer';
 import { ReducerNames } from '../../../../store/reducers/reducerNames';
+import { Match } from './Match';
 import { MatchesControls } from './MatchesControls';
 
 interface HistoryWrapperProps {
@@ -89,28 +90,26 @@ export const Matches = () => {
 
   return (
     <MatchesWrapper teamName={teamName}>
-      <MatchesControls />
-      {matches
-        .filter(matchGroup => matchGroup.display)
-        .map((matchGroup, idx) => (
-          <div key={idx}>
-            {matchGroup.date}
-            {matchGroup.matches
-              .toReversed()
-              .filter(match => match.display).map((match) => (
-                <div key={match.url}>
-                  {match.url}
-                </div>
-              ))}
-          </div>
-        ))
-      }
-      <button
-        className="btn"
-        onClick={() => dispatch(showOneMoreMatch())}
-      >
-        Show more
-      </button>
+      <div className="">
+        <MatchesControls />
+      </div>
+
+      <div className="flex flex-col pt-4">
+        {matches
+          .toReversed()
+          .filter(matchGroup => matchGroup.display)
+          .map((matchGroup, idx) => <Match matchGroup={matchGroup} key={idx} />)
+        }
+      </div>
+
+      <div className="py-4 w-full flex justify-center">
+        <button
+          className="btn"
+          onClick={() => dispatch(showOneMoreMatch())}
+        >
+          Reveal match
+        </button>
+      </div>
     </MatchesWrapper>
   );
 };

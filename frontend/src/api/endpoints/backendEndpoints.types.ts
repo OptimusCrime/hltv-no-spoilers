@@ -7,19 +7,28 @@ export namespace BackendEndpoints {
   }
 
   export namespace TeamMatches {
-    export interface TeamMatchGroup {
+     interface TeamMatchGroup {
       date: string;
       matches: TeamMatch[];
     }
 
     export interface TeamMatch {
-      url: string;
+      id: number;
       team1: string;
       team2: string;
       eventName: string;
-      matchType: string;
+      type: string;
     }
 
     export type GET = TeamMatchGroup[];
+  }
+
+  export namespace MatchMaps {
+    interface MatchMap {
+      title: string;
+      url: string;
+    }
+
+    export type GET = MatchMap[];
   }
 }
