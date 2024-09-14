@@ -16,6 +16,11 @@ func ParseMatchVODs(body string) ([]VOD, error) {
 	for {
 		if !isVODContainerStart(tokenizer) {
 			tokenizer.Next()
+
+			if *tokenizer.TokenType == html.ErrorToken {
+				return nil, nil
+			}
+
 			continue
 		}
 
@@ -45,7 +50,7 @@ func parseVodCollection(t *ttokenizer.Ttokenizer) ([]VOD, error) {
 					return vods, nil
 				}
 
-				if isStreamLinkDiv(attribute) {
+				if isStreamLinkDiv(attribute) && !isStreamDemoLinkButton(attributes) {
 					vod, err := parseVOD(t)
 					if err != nil {
 						continue
@@ -64,8 +69,13 @@ func parseVOD(t *ttokenizer.Ttokenizer) (*VOD, error) {
 		return nil, err
 	}
 
+	streamTitle, err := parseVodStreamTitle(t)
+	if err != nil {
+		return nil, err
+	}
+
 	return &VOD{
-		Title: "Foobar",
+		Title: streamTitle,
 		Url:   streamUrl,
 	}, nil
 }
@@ -79,4 +89,30 @@ func parseVodStreamUrl(t *ttokenizer.Ttokenizer) (string, error) {
 	}
 
 	return "", nil
+}
+
+func parseVodStreamTitle(t *ttokenizer.Ttokenizer) (string, error) {
+	for {
+		t.Next()
+		tokenType := *t.TokenType
+		token := *t.Token
+
+		switch {
+		case tokenType == html.ErrorToken:
+			return "", nil
+		default:
+			attributes := token.Attr
+			if len(attributes) == 0 {
+				continue
+			}
+
+			for _, attribute := range attributes {
+				if !isSpoilerTag(attribute) {
+					continue
+				}
+
+				return t.GetNextTokenString()
+			}
+		}
+	}
 }

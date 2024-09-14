@@ -4,6 +4,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/optimuscrime/hltv-no-spoilers/pgk/logger"
 	"github.com/optimuscrime/hltv-no-spoilers/pgk/render"
+	"github.com/optimuscrime/hltv-no-spoilers/pgk/resterr"
 	"net/http"
 )
 
@@ -25,9 +26,17 @@ func (h *httpHandler) getMatchesForTeam(w http.ResponseWriter, r *http.Request) 
 
 	resp, err := findMatchesForTeam(teamId)
 	if err != nil {
-		log.Debug("failed to find matches for team: %v", err)
+		render.JSON(w, r, resterr.FromErr(err, 500))
 		return
 	}
 
-	render.JSON(w, r, &resp)
+	if resp == nil {
+		log.Debug("could not find any matches for team")
+		w.WriteHeader(404)
+		return
+	}
+
+	log.Debug("successfully fetched matches for team")
+
+	render.JSON(w, r, resp)
 }

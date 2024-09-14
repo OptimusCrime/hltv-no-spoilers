@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"errors"
 	"github.com/optimuscrime/hltv-no-spoilers/pgk/ttokenizer"
 	"golang.org/x/net/html"
 	"time"
@@ -99,7 +100,7 @@ func parseTeamResultGroupDate(tokenizer *ttokenizer.Ttokenizer) (*time.Time, err
 	newTokenType := *tokenizer.TokenType
 	newToken := *tokenizer.Token
 	if newTokenType == html.ErrorToken {
-		return nil, ttokenizer.ErrFailedToParse
+		return nil, errors.New("failed to parse document")
 	}
 
 	return parseMatchDateStr(html.EscapeString(newToken.String()))

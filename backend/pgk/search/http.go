@@ -4,6 +4,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/optimuscrime/hltv-no-spoilers/pgk/logger"
 	"github.com/optimuscrime/hltv-no-spoilers/pgk/render"
+	"github.com/optimuscrime/hltv-no-spoilers/pgk/resterr"
 	"net/http"
 )
 
@@ -23,15 +24,17 @@ func (h *httpHandler) Search(w http.ResponseWriter, r *http.Request) {
 	term := r.URL.Query().Get("term")
 
 	if len(term) < 2 {
-		log.Debug("tried to search for term with two or fewer characters, which is not allowed")
+		render.JSON(w, r, resterr.New("at least two characters are required when searching for team", 400))
 		return
 	}
 
 	resp, err := searchForTeams(term)
 	if err != nil {
-		log.Debug("failed to search for teams: %v", err)
+		render.JSON(w, r, resterr.FromErr(err, 500))
 		return
 	}
+
+	log.Debug("successfully searched for team by term")
 
 	render.JSON(w, r, resp)
 }

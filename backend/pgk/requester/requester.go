@@ -3,7 +3,6 @@ package requester
 import (
 	"crypto/tls"
 	"errors"
-	"fmt"
 	"io"
 	"net"
 	"net/http"
@@ -23,8 +22,6 @@ type RequestParams struct {
 func MakeRequest(p *RequestParams) ([]byte, error) {
 	requestUrl := BaseUrl + p.Url
 
-	fmt.Println(requestUrl)
-
 	req, err := http.NewRequest("GET", requestUrl, nil)
 	if err != nil {
 		return nil, err
@@ -34,11 +31,17 @@ func MakeRequest(p *RequestParams) ([]byte, error) {
 		req.URL.RawQuery = p.Query.Encode()
 	}
 
+	req.Header.Add("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
+	req.Header.Add("accept-language", "nb,en-US;q=0.9,en;q=0.8")
+	req.Header.Add("cache-control", "no-cache")
+	req.Header.Add("referer", "https://www.hltv.org")
+	req.Header.Add("pragma", "no-cache")
 	req.Header.Add("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 OPR/112.0.0.0")
+	req.Header.Add("priority", "u=0, i")
 
 	// Shamelessly stolen from: https://github.com/sweetbbak/go-cloudflare-bypass/blob/main/reqwest/reqwest.go
-	// Turns out that HLTV.org is protected behind Cloudflare, and the default Go HTTP client was missing a bunch
-	// of cipher suites... Enabling them fixed the issue. Two hours of horrendous debugging, yay.
+	// hltv.org is protected behind Cloudflare, and the default Go HTTP client was missing a bunch
+	// of cipher suites... Enabling them fixed the issue.
 	tlsConfig := http.DefaultTransport.(*http.Transport).TLSClientConfig
 
 	client := &http.Client{

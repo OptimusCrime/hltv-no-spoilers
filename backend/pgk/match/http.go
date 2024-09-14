@@ -4,6 +4,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/optimuscrime/hltv-no-spoilers/pgk/logger"
 	"github.com/optimuscrime/hltv-no-spoilers/pgk/render"
+	"github.com/optimuscrime/hltv-no-spoilers/pgk/resterr"
 	"net/http"
 )
 
@@ -25,9 +26,17 @@ func (h *httpHandler) getMatchVODs(w http.ResponseWriter, r *http.Request) {
 
 	resp, err := findMatchVODs(matchId)
 	if err != nil {
-		log.Debug("failed to find VODs for match: %v", err)
+		render.JSON(w, r, resterr.FromErr(err, 500))
 		return
 	}
 
-	render.JSON(w, r, &resp)
+	if resp == nil {
+		log.Debug("could not find any VODs for match")
+		w.WriteHeader(404)
+		return
+	}
+
+	log.Debug("successfully fetched match VODs")
+
+	render.JSON(w, r, resp)
 }

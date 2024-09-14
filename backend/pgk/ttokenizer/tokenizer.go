@@ -1,6 +1,7 @@
 package ttokenizer
 
 import (
+	"errors"
 	"golang.org/x/net/html"
 	"strings"
 )
@@ -31,18 +32,18 @@ func (t *Ttokenizer) Next() {
 	t.Token = &token
 }
 
-func (t *Ttokenizer) GetTokenString() (string, error) {
-	str := strings.Trim(html.EscapeString(t.Token.String()), "")
-	return str, nil
+func (t *Ttokenizer) GetTokenString() string {
+	return strings.Trim(html.EscapeString(t.Token.String()), "")
 }
 
 func (t *Ttokenizer) GetNextTokenString() (string, error) {
 	t.Next()
+
 	newTokenType := *t.TokenType
 
 	if newTokenType == html.ErrorToken {
-		return "", ErrFailedToParse
+		return "", errors.New("failed to parse document")
 	}
 
-	return t.GetTokenString()
+	return t.GetTokenString(), nil
 }
