@@ -3,7 +3,7 @@ import ky from 'ky';
 import { BackendEndpoints } from './backendEndpoints.types';
 
 const api = ky.create({
-  prefixUrl: process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:8182',
+  prefixUrl: process.env.NODE_ENV === 'production' ? 'https://hltv.optimuscrime.net' : 'http://localhost:8182',
   retry: 0,
 });
 
