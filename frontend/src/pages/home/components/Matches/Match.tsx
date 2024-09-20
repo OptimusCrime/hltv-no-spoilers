@@ -14,15 +14,15 @@ export const Match = (props: MatchProps) => {
   return (
     <div>
       <div className="flex justify-center">
-        <h3 className="text-2xl py-4">
-          {parseDate(matchGroup.date)}
-        </h3>
+        <h3 className="text-2xl pb-4">{parseDate(matchGroup.date)}</h3>
       </div>
-      <div className="space-y-4">
+      <div className="space-y-4 pb-4">
         {matchGroup.matches
-          .filter(match => match.display).map((match) => (
+          .toReversed()
+          .filter((match) => match.display)
+          .map((match) => (
             <div key={match.id} className="flex flex-row bg-base-100 p-4 rounded-md">
-              <div className="w-1/2">
+              <div className="w-1/2 text-left">
                 <h4 className="text-xl pb-2">
                   {match.team1} vs. {match.team2}
                 </h4>
@@ -36,4 +36,4 @@ export const Match = (props: MatchProps) => {
       </div>
     </div>
   );
-}
+};

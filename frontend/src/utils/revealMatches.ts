@@ -1,7 +1,10 @@
 import { StartingPointType } from '../store/reducers/globalReducer/types';
 import { TeamMatchGroup } from '../types/common';
 
-export const revealMatchesFromStartingPoint = (matchGroups: TeamMatchGroup[], startingPoint: StartingPointType): TeamMatchGroup[] => {
+export const revealMatchesFromStartingPoint = (
+  matchGroups: TeamMatchGroup[],
+  startingPoint: StartingPointType,
+): TeamMatchGroup[] => {
   const startDate = startingPointToDate(startingPoint);
   const resetMatchGroups = resetMatches(matchGroups);
 
@@ -16,7 +19,7 @@ export const revealMatchesFromStartingPoint = (matchGroups: TeamMatchGroup[], st
 
   let revealedGroup = false;
 
-  return resetMatchGroups.map(matchGroup => {
+  return resetMatchGroups.map((matchGroup) => {
     const matchGroupDate = new Date(matchGroup.date);
     if (matchGroupDate.getTime() > startDate.getTime()) {
       return matchGroup;
@@ -33,7 +36,7 @@ export const revealMatchesFromStartingPoint = (matchGroups: TeamMatchGroup[], st
     return {
       ...matchGroup,
       display: true,
-      matches: matchGroup.matches.map(match => {
+      matches: matchGroup.matches.map((match) => {
         if (revealedMatch) {
           return match;
         }
@@ -57,21 +60,20 @@ export const revealOneMoreMatch = (matchGroups: TeamMatchGroup[]): TeamMatchGrou
   // The matches are listed from newest to oldest, so we flip the list twice...
   return matchGroups
     .reverse()
-    .map(matchGroup => {
+    .map((matchGroup) => {
       if (revealed) {
         return matchGroup;
       }
 
       const numMatchesInGroup = matchGroup.matches.length;
-      const revealedMatchesInGroup = matchGroup.matches.filter(match => match.display).length;
+      const revealedMatchesInGroup = matchGroup.matches.filter((match) => match.display).length;
 
       // There could be hidden matches before the starting point, so make sure that we have found at least one
       // visible match
       if (!foundStart) {
         if (revealedMatchesInGroup) {
           foundStart = true;
-        }
-        else {
+        } else {
           // Outside scope
           return matchGroup;
         }
@@ -92,33 +94,34 @@ export const revealOneMoreMatch = (matchGroups: TeamMatchGroup[]): TeamMatchGrou
             return {
               ...match,
               display: true,
-            }
+            };
           }
 
           return match;
-        })
+        }),
       };
     })
     .reverse();
 };
 
-export const resetMatches = (matchGroups: TeamMatchGroup[]): TeamMatchGroup[] => matchGroups.map(matchGroup => ({
-  ...matchGroup,
-  display: false,
-  matches: matchGroup.matches.map(match => ({
-    ...match,
+export const resetMatches = (matchGroups: TeamMatchGroup[]): TeamMatchGroup[] =>
+  matchGroups.map((matchGroup) => ({
+    ...matchGroup,
     display: false,
-  })),
-}));
+    matches: matchGroup.matches.map((match) => ({
+      ...match,
+      display: false,
+    })),
+  }));
 
 const startingPointToDate = (startingPoint: StartingPointType): Date => {
   switch (startingPoint) {
     case 'one-week':
-      return new Date(Date.now() - (60 * 60 * 24 * 7 * 1000));
+      return new Date(Date.now() - 60 * 60 * 24 * 7 * 1000);
     case 'two-weeks':
-      return new Date(Date.now() - (60 * 60 * 24 * 14 * 1000));
+      return new Date(Date.now() - 60 * 60 * 24 * 14 * 1000);
     case 'one-month':
-      return new Date(Date.now() - (60 * 60 * 24 * 30 * 1000));
+      return new Date(Date.now() - 60 * 60 * 24 * 30 * 1000);
     default:
     case 'way-back':
       return new Date(0);

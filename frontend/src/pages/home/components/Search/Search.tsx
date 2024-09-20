@@ -55,11 +55,7 @@ export const Search = () => {
           }}
         />
 
-        <button
-          className="btn btn-primary"
-          disabled={isLoading}
-          onClick={submit}
-        >
+        <button className="btn btn-primary" disabled={isLoading} onClick={submit}>
           {isLoading ? <span className="loading loading-spinner"></span> : 'Search'}
         </button>
       </div>
@@ -83,10 +79,10 @@ export const Search = () => {
               onClick={() => {
                 dispatch(
                   setTeam({
-                      id: result.id,
-                      name: result.name,
-                    },
-                  ));
+                    id: result.id,
+                    name: result.name,
+                  }),
+                );
 
                 setItem(LocalStorageKeys.LOCAL_STORAGE_KEY_TEAM_ID, result.id.toString());
                 setItem(LocalStorageKeys.LOCAL_STORAGE_KEY_TEAM_NAME, result.name);
@@ -100,7 +96,6 @@ export const Search = () => {
           ))}
         </div>
       )}
-
     </div>
   );
 };

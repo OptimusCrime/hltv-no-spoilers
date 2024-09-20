@@ -10,7 +10,7 @@ const globalReducer = createSlice({
   name: ReducerNames.GLOBAL,
   initialState: fallbackInitialState,
   reducers: {
-    setTeam(state, action: PayloadAction<{id: number; name: string; }>) {
+    setTeam(state, action: PayloadAction<{ id: number; name: string }>) {
       state.teamId = action.payload.id;
       state.teamName = action.payload.name;
     },
@@ -18,11 +18,11 @@ const globalReducer = createSlice({
       state.matches = action.payload;
       state.startingPoint = 'two-weeks';
     },
-    setMatchMap(state, action: PayloadAction<{matchId: number; data: MatchMap[]}>) {
+    setMatchMap(state, action: PayloadAction<{ matchId: number; data: MatchMap[] }>) {
       state.maps = [...state.maps, action.payload];
     },
     showOneMoreMap(state, action: PayloadAction<number>) {
-      state.maps = state.maps.map(map => {
+      state.maps = state.maps.map((map) => {
         if (map.matchId !== action.payload) {
           return map;
         }
@@ -30,7 +30,7 @@ const globalReducer = createSlice({
         let foundNotVisible = false;
         return {
           ...map,
-          data: map.data.map(m => {
+          data: map.data.map((m) => {
             if (m.display) {
               return m;
             }
@@ -41,36 +41,29 @@ const globalReducer = createSlice({
               return {
                 ...m,
                 display: true,
-              }
+              };
             }
 
             return m;
-          })
-        }
-      })
+          }),
+        };
+      });
     },
     setStartingPoint(state, action: PayloadAction<StartingPointType>) {
       state.startingPoint = action.payload;
       state.matches = resetMatches(state.matches);
     },
     showOneMoreMatch(state) {
-      if (state.matches.some(match => match.display)) {
+      if (state.matches.some((match) => match.display)) {
         state.matches = revealOneMoreMatch(state.matches);
-      }
-      else {
+      } else {
         state.matches = revealMatchesFromStartingPoint(state.matches, state.startingPoint);
       }
-    }
+    },
   },
 });
 
-export const {
-  setTeam,
-  setMatches,
-  setMatchMap,
-  showOneMoreMap,
-  setStartingPoint,
-  showOneMoreMatch
-} = globalReducer.actions;
+export const { setTeam, setMatches, setMatchMap, showOneMoreMap, setStartingPoint, showOneMoreMatch } =
+  globalReducer.actions;
 
 export default globalReducer.reducer;

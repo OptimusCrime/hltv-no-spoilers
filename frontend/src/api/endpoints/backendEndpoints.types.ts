@@ -7,7 +7,7 @@ export namespace BackendEndpoints {
   }
 
   export namespace TeamMatches {
-     interface TeamMatchGroup {
+    interface TeamMatchGroup {
       date: string;
       matches: TeamMatch[];
     }

@@ -10,6 +10,8 @@ export const Wrapper = () => (
         <Header />
       </div>
     </div>
-    <div className="container mx-auto"><Home /></div>
+    <div className="container mx-auto">
+      <Home />
+    </div>
   </div>
 );

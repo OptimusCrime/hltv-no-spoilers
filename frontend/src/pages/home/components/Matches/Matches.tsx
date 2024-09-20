@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 import { getTeamMatches } from '../../../../api/endpoints/backendEndpoints';
 import { useAppDispatch, useAppSelector } from '../../../../store/hooks';
-import { setMatches,showOneMoreMatch } from '../../../../store/reducers/globalReducer';
+import { setMatches, showOneMoreMatch } from '../../../../store/reducers/globalReducer';
 import { ReducerNames } from '../../../../store/reducers/reducerNames';
 import { Match } from './Match';
 import { MatchesControls } from './MatchesControls';
@@ -19,9 +19,7 @@ const MatchesWrapper = (props: HistoryWrapperProps) => {
   return (
     <>
       <h4 className="text-3xl pb-2">{teamName === null ? 'Matches' : `Matches for ${teamName}`}</h4>
-      <div className="w-4/6">
-        {children}
-      </div>
+      <div className="w-4/6 flex self-center justify-center flex-col">{children}</div>
     </>
   );
 };
@@ -46,14 +44,18 @@ export const Matches = () => {
       const matchGroups = await getTeamMatches(teamId);
 
       // Shortest way to the finish line here you guys
-      dispatch(setMatches(matchGroups.map(matchGroup => ({
-        ...matchGroup,
-        display: false,
-        matches: matchGroup.matches.map(match => ({
-          ...match,
-          display: false,
-        })),
-      }))));
+      dispatch(
+        setMatches(
+          matchGroups.map((matchGroup) => ({
+            ...matchGroup,
+            display: false,
+            matches: matchGroup.matches.map((match) => ({
+              ...match,
+              display: false,
+            })),
+          })),
+        ),
+      );
     } catch (_) {
       setIsError(true);
     }
@@ -68,7 +70,7 @@ export const Matches = () => {
   if (isLoading) {
     return (
       <MatchesWrapper teamName={teamName}>
-        <div className="flex flex-col w-full items-center h-[calc(50vh-2rem)] justify-end">
+        <div className="flex flex-col w-full items-center h-[calc(50vh-2rem)] justify-center">
           <span className="loading loading-spinner loading-lg"></span>
           <div className="pt-10 text-center px-10">
             <span>Loading matches</span>
@@ -81,7 +83,7 @@ export const Matches = () => {
   if (isError && (teamId === null || teamName === null)) {
     return (
       <MatchesWrapper teamName={teamName}>
-        <div role="alert" className="alert alert-info">
+        <div role="alert" className="alert alert-info w-4/6">
           <span>Select a team to list match history.</span>
         </div>
       </MatchesWrapper>
@@ -94,21 +96,18 @@ export const Matches = () => {
         <MatchesControls />
       </div>
 
-      <div className="flex flex-col pt-4">
-        {matches
-          .toReversed()
-          .filter(matchGroup => matchGroup.display)
-          .map((matchGroup, idx) => <Match matchGroup={matchGroup} key={idx} />)
-        }
-      </div>
-
       <div className="py-4 w-full flex justify-center">
-        <button
-          className="btn"
-          onClick={() => dispatch(showOneMoreMatch())}
-        >
+        <button className="btn" onClick={() => dispatch(showOneMoreMatch())}>
           Reveal match
         </button>
+      </div>
+
+      <div className="flex flex-col">
+        {matches
+          .filter((matchGroup) => matchGroup.display)
+          .map((matchGroup, idx) => (
+            <Match matchGroup={matchGroup} key={idx} />
+          ))}
       </div>
     </MatchesWrapper>
   );

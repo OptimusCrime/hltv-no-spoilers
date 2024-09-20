@@ -7,5 +7,5 @@ export interface GlobalState {
   teamName: string | null;
   matches: TeamMatchGroup[];
   startingPoint: StartingPointType;
-  maps: {matchId: number; data: MatchMap[]}[];
+  maps: { matchId: number; data: MatchMap[] }[];
 }

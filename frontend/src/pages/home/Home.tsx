@@ -7,7 +7,7 @@ export const Home = () => (
     <div className="w-full lg:w-4/6 flex flex-col">
       <div className="w-full flex flex-col space-y-8">
         <div className="card bg-neutral text-neutral-content card-compact w-full">
-          <div className="card-body flex">
+          <div className="card-body flex text-center justify-center">
             <Matches />
           </div>
         </div>

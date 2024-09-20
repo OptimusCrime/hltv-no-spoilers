@@ -16,25 +16,25 @@ export const MatchesControls = () => {
       </div>
       <div className="flex flex-row justify-between bg-base-100 rounded-md p-4 w-auto">
         <button
-          className={cx('btn', {'btn-active': startingPoint === 'one-week' })}
+          className={cx('btn', { 'btn-active': startingPoint === 'one-week' })}
           onClick={() => dispatch(setStartingPoint('one-week'))}
         >
           One week ago
         </button>
         <button
-          className={cx('btn', {'btn-active': startingPoint === 'two-weeks' })}
+          className={cx('btn', { 'btn-active': startingPoint === 'two-weeks' })}
           onClick={() => dispatch(setStartingPoint('two-weeks'))}
         >
           Two weeks ago
         </button>
         <button
-          className={cx('btn', {'btn-active': startingPoint === 'one-month' })}
+          className={cx('btn', { 'btn-active': startingPoint === 'one-month' })}
           onClick={() => dispatch(setStartingPoint('one-month'))}
         >
           One month ago
         </button>
         <button
-          className={cx('btn', {'btn-active': startingPoint === 'way-back' })}
+          className={cx('btn', { 'btn-active': startingPoint === 'way-back' })}
           onClick={() => dispatch(setStartingPoint('way-back'))}
         >
           Way back
@@ -42,4 +42,4 @@ export const MatchesControls = () => {
       </div>
     </div>
   );
-}
+};
