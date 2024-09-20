@@ -1608,14 +1608,14 @@ input.btn[type="radio"]:checked:focus-visible {
 .flex-col {
   flex-direction: column;
 }
+.items-start {
+  align-items: flex-start;
+}
 .items-end {
   align-items: flex-end;
 }
 .items-center {
   align-items: center;
-}
-.justify-end {
-  justify-content: flex-end;
 }
 .justify-center {
   justify-content: center;
@@ -1658,6 +1658,9 @@ input.btn[type="radio"]:checked:focus-visible {
   margin-top: calc(2rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(2rem * 0);
   margin-bottom: calc(2rem * var(--tw-space-y-reverse));
+}
+.self-center {
+  align-self: center;
 }
 .rounded-md {
   border-radius: 0.375rem;
@@ -1708,6 +1711,9 @@ input.btn[type="radio"]:checked:focus-visible {
 }
 .pt-4 {
   padding-top: 1rem;
+}
+.text-left {
+  text-align: left;
 }
 .text-center {
   text-align: center;
