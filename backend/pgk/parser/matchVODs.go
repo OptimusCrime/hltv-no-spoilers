@@ -76,7 +76,7 @@ func parseVOD(t *ttokenizer.Ttokenizer) (*VOD, error) {
 
 	return &VOD{
 		Title: streamTitle,
-		Url:   streamUrl,
+		Url:   parseTwitchUrl(streamUrl),
 	}, nil
 }
 

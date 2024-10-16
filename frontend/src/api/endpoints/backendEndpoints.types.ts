@@ -18,6 +18,8 @@ export namespace BackendEndpoints {
       team2: string;
       eventName: string;
       type: string;
+      uri: string;
+      url: string;
     }
 
     export type GET = TeamMatchGroup[];

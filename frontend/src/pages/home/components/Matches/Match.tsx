@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { HLTV_URL } from '../../../../constants';
 import { TeamMatchGroup } from '../../../../types/common';
 import { parseDate } from '../../../../utils/dateHelpers';
 import { Maps } from './Maps';
@@ -24,13 +25,20 @@ export const Match = (props: MatchProps) => {
             <div key={match.id} className="flex flex-row bg-base-100 p-4 rounded-md">
               <div className="w-1/2 text-left">
                 <h4 className="text-xl pb-2">
-                  {match.team1} vs. {match.team2}
+                  <a
+                    href={`${HLTV_URL}${match.url}`}
+                    target="blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:no-underline"
+                  >
+                    {match.team1} vs. {match.team2}
+                  </a>
                 </h4>
                 <p>
                   {match.eventName} {match.type.length > 0 && `(${match.type})`}
                 </p>
               </div>
-              <Maps matchId={match.id} />
+              <Maps matchId={match.id} matchUri={match.uri} />
             </div>
           ))}
       </div>

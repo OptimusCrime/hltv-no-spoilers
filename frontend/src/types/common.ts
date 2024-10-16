@@ -16,6 +16,8 @@ export interface TeamMatch {
   eventName: string;
   type: string;
   display: boolean;
+  uri: string;
+  url: string;
 }
 
 export interface MatchMap {

@@ -23,8 +23,9 @@ func (h *httpHandler) getMatchVODs(w http.ResponseWriter, r *http.Request) {
 	log := logger.FromContext(ctx)
 
 	matchId := mux.Vars(r)["matchId"]
+	matchUri := r.URL.Query().Get("uri")
 
-	resp, err := findMatchVODs(matchId)
+	resp, err := findMatchVODs(matchId, matchUri)
 	if err != nil {
 		render.JSON(w, r, resterr.FromErr(err, 500))
 		return

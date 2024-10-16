@@ -19,8 +19,8 @@ export const getTeamMatches = (teamId: number) =>
     .json<BackendEndpoints.TeamMatches.GET>()
     .then((res) => res);
 
-export const getMatchMaps = (matchId: number) =>
+export const getMatchMaps = (params: { matchId: number; matchUri: string }) =>
   api
-    .get(`v1/match/${matchId}`)
+    .get(`v1/match/${params.matchId}?uri=${params.matchUri}`)
     .json<BackendEndpoints.MatchMaps.GET>()
     .then((res) => res);

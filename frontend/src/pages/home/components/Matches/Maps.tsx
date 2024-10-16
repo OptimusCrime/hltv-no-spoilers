@@ -7,6 +7,7 @@ import { ReducerNames } from '../../../../store/reducers/reducerNames';
 
 interface MapsProps {
   matchId: number;
+  matchUri: string;
 }
 
 export const Maps = (props: MapsProps) => {
@@ -17,10 +18,10 @@ export const Maps = (props: MapsProps) => {
 
   const mapsForMatch = maps.find((map) => map.matchId === matchId);
 
-  const revealMap = async (matchId: number) => {
+  const revealMap = async (params: { matchId: number; matchUri: string }) => {
     if (!mapsForMatch) {
       try {
-        const matchMaps = await getMatchMaps(matchId);
+        const matchMaps = await getMatchMaps(params);
 
         dispatch(
           setMatchMap({
@@ -56,7 +57,7 @@ export const Maps = (props: MapsProps) => {
             ))}
         </div>
       )}
-      <button className="btn" onClick={() => revealMap(matchId)}>
+      <button className="btn" onClick={() => revealMap(props)}>
         Reveal map
       </button>
     </div>

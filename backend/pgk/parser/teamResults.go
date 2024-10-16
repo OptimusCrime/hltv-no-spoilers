@@ -13,6 +13,8 @@ type TeamResult struct {
 	Team2     string `json:"team2"`
 	EventName string `json:"eventName"`
 	MatchType string `json:"type"`
+	Uri       string `json:"uri"`
+	Url       string `json:"url"`
 }
 
 type TeamResultGroup struct {
@@ -129,12 +131,20 @@ func parseTeamResults(tokenizer *ttokenizer.Ttokenizer) (*TeamResult, error) {
 
 			for _, attribute := range attributes {
 				if isMatchURL(attribute) {
-					matchId, err := parseMatchIdFromUrl(attribute.Val)
+					matchUrl := attribute.Val
+					match.Url = matchUrl
+
+					matchId, err := parseMatchIdFromUrl(matchUrl)
 					if err != nil {
 						return nil, err
 					}
-
 					match.Id = matchId
+
+					matchUri, err := parseMatchUriFromUrl(matchUrl)
+					if err != nil {
+						return nil, err
+					}
+					match.Uri = matchUri
 				}
 
 				if isTeamName(attribute, token) {

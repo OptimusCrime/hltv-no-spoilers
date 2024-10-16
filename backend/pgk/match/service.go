@@ -5,8 +5,8 @@ import (
 	"github.com/optimuscrime/hltv-no-spoilers/pgk/requester"
 )
 
-func findMatchVODs(matchId string) ([]parser.VOD, error) {
-	bodyBytes, err := requester.MakeRequest(&requester.RequestParams{Url: "/matches/" + matchId + "/foobar", Query: nil})
+func findMatchVODs(matchId string, matchUri string) ([]parser.VOD, error) {
+	bodyBytes, err := requester.MakeRequest(&requester.RequestParams{Url: "/matches/" + matchId + "/" + matchUri, Query: nil})
 	if err != nil {
 		return nil, err
 	}

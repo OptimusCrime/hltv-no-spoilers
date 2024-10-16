@@ -11,6 +11,11 @@ import (
 )
 
 var matchIdExp = regexp.MustCompile(`(?m)^/matches/([0-9]+).*$`)
+var matchUriExp = regexp.MustCompile(`(?m)^/matches/[0-9]+/(.*)$`)
+var twitchVideoIdExp = regexp.MustCompile(`(?m)video=v([0-9]+)`)
+var twitchTimestampExp = regexp.MustCompile(`(?m)t=([^&]+)`)
+
+// 5h55m48s
 var dateExp = regexp.MustCompile("[^0-9]+")
 
 func parseMatchIdFromUrl(url string) (int64, error) {
@@ -22,6 +27,32 @@ func parseMatchIdFromUrl(url string) (int64, error) {
 	}
 
 	return strconv.ParseInt(matches[1], 10, 0)
+}
+
+func parseMatchUriFromUrl(url string) (string, error) {
+	escapedUrl := html.UnescapeString(url)
+	matches := matchUriExp.FindStringSubmatch(escapedUrl)
+
+	if len(matches) != 2 {
+		return "", errors.New("could not find match uri: " + escapedUrl)
+	}
+
+	return matches[1], nil
+}
+
+func parseTwitchUrl(url string) string {
+	if !strings.HasPrefix(url, "https://player.twitch.tv") {
+		return url
+	}
+
+	twitchVideoId := twitchVideoIdExp.FindStringSubmatch(url)
+	twitchTimestamp := twitchTimestampExp.FindStringSubmatch(url)
+
+	if len(twitchVideoId) != 2 || len(twitchTimestamp) != 2 {
+		return url
+	}
+
+	return "https://www.twitch.tv/videos/" + twitchVideoId[1] + "?t=" + twitchTimestamp[1]
 }
 
 // lmao
