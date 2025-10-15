@@ -1,13 +1,11 @@
 package requester
 
 import (
-	"crypto/tls"
 	"errors"
-	"io"
-	"net"
-	"net/http"
 	"net/url"
-	"time"
+
+	"github.com/RomainMichau/CycleTLS/cycletls"
+	"github.com/RomainMichau/cloudscraper_go/cloudscraper"
 )
 
 const (
@@ -22,64 +20,43 @@ type RequestParams struct {
 func MakeRequest(p *RequestParams) ([]byte, error) {
 	requestUrl := BaseUrl + p.Url
 
-	req, err := http.NewRequest("GET", requestUrl, nil)
-	if err != nil {
-		return nil, err
-	}
-
 	if p.Query != nil {
-		req.URL.RawQuery = p.Query.Encode()
+		requestUrl += "?" + p.Query.Encode()
 	}
 
-	req.Header.Add("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
-	req.Header.Add("accept-language", "nb,en-US;q=0.9,en;q=0.8")
-	req.Header.Add("cache-control", "no-cache")
-	req.Header.Add("referer", "https://www.hltv.org")
-	req.Header.Add("pragma", "no-cache")
-	req.Header.Add("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 OPR/112.0.0.0")
-	req.Header.Add("priority", "u=0, i")
+	client, _ := cloudscraper.Init(false, false)
+	options := cycletls.Options{
+		Headers: map[string]string{
+			"accept":                    "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+			"accept-encoding":           "gzip, deflate, br, zstd",
+			"accept-language":           "nb,en-US;q=0.9,en;q=0.8",
+			"cache-control":             "no-cache",
+			"referer":                   "https://www.hltv.org",
+			"pragma":                    "no-cache",
+			"user-agent":                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 OPR/112.0.0.0",
+			"priority":                  "u=0, i",
+			"sec-ch-ua":                 "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Opera\";v=\"122\"",
+			"sec-ch-ua-mobile":          "?0",
+			"sec-ch-ua-platform":        "\"macOS\"",
+			"sec-fetch-dest":            "document",
+			"sec-fetch-mode":            "navigate",
+			"sec-fetch-site":            "same-origin",
+			"sec-fetch-user":            "?1",
+			"upgrade-insecure-requests": "1",
+		},
+		Timeout: 10,
+	}
 
-	// Shamelessly stolen from: https://github.com/sweetbbak/go-cloudflare-bypass/blob/main/reqwest/reqwest.go
-	// hltv.org is protected behind Cloudflare, and the default Go HTTP client was missing a bunch
-	// of cipher suites... Enabling them fixed the issue.
-	tlsConfig := http.DefaultTransport.(*http.Transport).TLSClientConfig
+	resp, err := client.Do(requestUrl, options, "GET")
 
-	client := &http.Client{
-		Transport: &http.Transport{
-			TLSHandshakeTimeout: 30 * time.Second,
-			DisableKeepAlives:   false,
-
-			TLSClientConfig: &tls.Config{
-				CipherSuites: []uint16{
-					tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
-					tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
-					tls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
-					tls.TLS_AES_128_GCM_SHA256,
-					tls.VersionTLS13,
-					tls.VersionTLS10,
-				},
-			},
-			DialTLS: func(network, addr string) (net.Conn, error) {
-				return tls.Dial(network, addr, tlsConfig)
-			},
-		}}
-	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
 
-	bodyBytes, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	if err = resp.Body.Close(); err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode == 500 {
+	if resp.Status == 500 {
 		return nil, errors.New("server responded with 500")
 	}
 
-	return bodyBytes, nil
+	// This is a bit silly
+	return []byte(resp.Body), nil
 }

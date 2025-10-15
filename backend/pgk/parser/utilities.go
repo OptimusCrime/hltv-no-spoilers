@@ -14,8 +14,6 @@ var matchIdExp = regexp.MustCompile(`(?m)^/matches/([0-9]+).*$`)
 var matchUriExp = regexp.MustCompile(`(?m)^/matches/[0-9]+/(.*)$`)
 var twitchVideoIdExp = regexp.MustCompile(`(?m)video=v([0-9]+)`)
 var twitchTimestampExp = regexp.MustCompile(`(?m)t=([^&]+)`)
-
-// 5h55m48s
 var dateExp = regexp.MustCompile("[^0-9]+")
 
 func parseMatchIdFromUrl(url string) (int64, error) {
