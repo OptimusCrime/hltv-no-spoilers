@@ -55,9 +55,9 @@ const globalReducer = createSlice({
     },
     showOneMoreMatch(state) {
       if (state.matches.some((match) => match.display)) {
-        state.matches = revealOneMoreMatch(state.matches);
+        state.matches = revealOneMoreMatch(state.matches, state.teamId ?? 0);
       } else {
-        state.matches = revealMatchesFromStartingPoint(state.matches, state.startingPoint);
+        state.matches = revealMatchesFromStartingPoint(state.matches, state.startingPoint, state.teamId ?? 0);
       }
     },
   },

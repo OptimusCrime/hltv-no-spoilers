@@ -5,6 +5,7 @@ import { getTeamMatches } from '../../../../api/endpoints/backendEndpoints';
 import { useAppDispatch, useAppSelector } from '../../../../store/hooks';
 import { setMatches, showOneMoreMatch } from '../../../../store/reducers/globalReducer';
 import { ReducerNames } from '../../../../store/reducers/reducerNames';
+import {getLastShownMatch} from "../../../../utils/matchHistoryHelpers";
 import { Match } from './Match';
 import { MatchesControls } from './MatchesControls';
 
@@ -19,7 +20,7 @@ const MatchesWrapper = (props: HistoryWrapperProps) => {
   return (
     <>
       <h4 className="text-3xl pb-2">{teamName === null ? 'Matches' : `Matches for ${teamName}`}</h4>
-      <div className="w-4/6 flex self-center justify-center flex-col">{children}</div>
+      <div className="w-full flex self-center justify-center flex-col">{children}</div>
     </>
   );
 };
@@ -42,6 +43,7 @@ export const Matches = () => {
 
     try {
       const matchGroups = await getTeamMatches(teamId);
+      const lastShownMatch = getLastShownMatch(teamId);
 
       // Shortest way to the finish line here you guys
       dispatch(
@@ -52,6 +54,7 @@ export const Matches = () => {
             matches: matchGroup.matches.map((match) => ({
               ...match,
               display: false,
+              alreadyShown: lastShownMatch !== null ? match.id <= lastShownMatch : false,
             })),
           })),
         ),

@@ -43,9 +43,9 @@ export const Maps = (props: MapsProps) => {
   };
 
   return (
-    <div className="w-1/2 border-l-[1px] border-base-300 pl-4 flex flex-col items-start">
+    <div className="w-full md:w-1/2 md:border-l-[1px] border-base-300 md:pl-4 pb-4 md:pb-0 flex flex-col md:items-start items-center">
       {mapsForMatch && (
-        <div className="flex text-left flex-col space-y-4 pb-4">
+        <div className="flex text-left flex-col md:space-y-4 pb-4">
           {mapsForMatch.data
             .filter((map) => map.display)
             .map((map, idx) => (

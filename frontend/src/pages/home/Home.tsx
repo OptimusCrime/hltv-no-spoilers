@@ -3,7 +3,7 @@ import React from 'react';
 import { Matches, Search } from './components';
 
 export const Home = () => (
-  <div className="w-full flex lg:flex-row flex-col space-x-0 lg:space-x-8">
+  <div className="w-full flex lg:flex-row flex-col space-x-0 lg:space-x-8 space-y-8 px-4 lg:space-y-0 lg:px-0">
     <div className="w-full lg:w-4/6 flex flex-col">
       <div className="w-full flex flex-col space-y-8">
         <div className="card bg-neutral text-neutral-content card-compact w-full">

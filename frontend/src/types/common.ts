@@ -18,6 +18,7 @@ export interface TeamMatch {
   display: boolean;
   uri: string;
   url: string;
+  alreadyShown: boolean;
 }
 
 export interface MatchMap {

@@ -10,11 +10,11 @@ export const MatchesControls = () => {
   const dispatch = useAppDispatch();
 
   return (
-    <div className="flex flex-col w-full space-y-4">
+    <div className="flex flex-col w-full space-y-4 items-center">
       <div>
         <p>Matches loaded. Select starting point.</p>
       </div>
-      <div className="flex flex-row justify-between bg-base-100 rounded-md p-4 w-auto">
+      <div className="flex md:flex-row flex-col bg-base-100 rounded-md p-4 w-auto max-w-[600px] space-y-4 md:space-y-0 md:space-x-4">
         <button
           className={cx('btn', { 'btn-active': startingPoint === 'one-week' })}
           onClick={() => dispatch(setStartingPoint('one-week'))}

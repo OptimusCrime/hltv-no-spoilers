@@ -14,6 +14,9 @@ module.exports = (env, argv) => {
       filename: 'static/[name].[contenthash].js',
       path: buildPath,
     },
+    performance: {
+      hints: false,
+    },
     resolve: {
       extensions: ['.ts', '.tsx', '.json', '.js', '.jsx'],
     },

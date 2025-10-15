@@ -26,6 +26,7 @@
   },
   "scripts": {
     "start": "webpack serve --mode development",
+    "start:prod": "NODE_ENV=production webpack serve --mode production",
     "build": "webpack --mode production",
     "build:prod": "NODE_ENV=production webpack --mode production",
     "build:dev": "NODE_ENV=development webpack --mode development",

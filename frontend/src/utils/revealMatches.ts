@@ -1,9 +1,11 @@
 import { StartingPointType } from '../store/reducers/globalReducer/types';
 import { TeamMatchGroup } from '../types/common';
+import {getLastShownMatch, setLastShownMatch} from "./matchHistoryHelpers";
 
 export const revealMatchesFromStartingPoint = (
   matchGroups: TeamMatchGroup[],
   startingPoint: StartingPointType,
+  teamId: number,
 ): TeamMatchGroup[] => {
   const startDate = startingPointToDate(startingPoint);
   const resetMatchGroups = resetMatches(matchGroups);
@@ -43,6 +45,11 @@ export const revealMatchesFromStartingPoint = (
 
         revealedMatch = true;
 
+        const lastShownMatch = getLastShownMatch(teamId);
+        if (!lastShownMatch || match.id < lastShownMatch) {
+          setLastShownMatch(teamId, match.id);
+        }
+
         return {
           ...match,
           display: true,
@@ -53,7 +60,7 @@ export const revealMatchesFromStartingPoint = (
 };
 
 // There has got to be a better way of doing this
-export const revealOneMoreMatch = (matchGroups: TeamMatchGroup[]): TeamMatchGroup[] => {
+export const revealOneMoreMatch = (matchGroups: TeamMatchGroup[], teamId: number): TeamMatchGroup[] => {
   let foundStart = false;
   let revealed = false;
 
@@ -91,6 +98,11 @@ export const revealOneMoreMatch = (matchGroups: TeamMatchGroup[]): TeamMatchGrou
         display: true,
         matches: matchGroup.matches.map((match, idx) => {
           if (idx === revealedMatchesInGroup) {
+            const lastShownMatch = getLastShownMatch(teamId);
+            if (lastShownMatch !== null && lastShownMatch < match.id) {
+              setLastShownMatch(teamId, match.id);
+            }
+
             return {
               ...match,
               display: true,
